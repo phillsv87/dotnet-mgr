@@ -1,0 +1,14 @@
+[
+    {
+        "name":"dotnet-sdk-6.0.200-osx-arm64",
+        "download":"https://download.visualstudio.microsoft.com/download/pr/6deb083b-8fd4-4e8a-a0b3-54dba024c54b/b34dbaf7464b62d809e2d1ad6303bc15/dotnet-sdk-6.0.200-osx-arm64.tar.gz"
+    },
+    {
+        "name":"dotnet-sdk-5.0.405-osx-x64",
+        "download":"https://download.visualstudio.microsoft.com/download/pr/308f5dac-451a-4c73-b1be-2730f9bfa7f8/fb4c3bb3d1e91e650e45dda04802a43b/dotnet-sdk-5.0.405-osx-x64.tar.gz"
+    },
+    {
+        "name":"dotnet-sdk-3.1.416-osx-x64",
+        "download":"https://download.visualstudio.microsoft.com/download/pr/895b7e35-b1c2-4d1d-8d7f-f82f4ae70eb7/9470e66ca28443328cbaa36963ff83f8/dotnet-sdk-3.1.416-osx-x64.tar.gz"
+    }
+]

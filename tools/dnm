@@ -1,0 +1,2 @@
+#!/usr/bin/env pwsh
+Invoke-Expression "&`"$env:DOTNET_MGR_ROOT/dotnet-mgr.ps1`" $args"
