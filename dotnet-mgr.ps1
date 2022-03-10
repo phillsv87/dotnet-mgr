@@ -4,6 +4,7 @@ param(
     [switch]$list,
     [switch]$help,
     [string]$install,
+    [switch]$installAll,
     [string]$installCurrent,
     [string]$init,
     [switch]$noCache,
@@ -65,36 +66,52 @@ try{
             throw "Specified version not found - $install. See versions above"
         }
 
-        $download=$version.download
+        $downloadUrl=$version.download
 
-        if(!$download){
+        if(!$downloadUrl){
             throw "Found version does not define a download url"
         }
 
         $installLocation="$versionsDir/$install"
 
-        $filename=[System.IO.Path]::GetFileName($download)
+        $filename=[System.IO.Path]::GetFileName($downloadUrl)
 
         $downloadFile="$downlaodsDir/$filename"
 
-        if($noCache -and (Test-Path $downloadFile)){
-            rm $downloadFile
+        if($noCache){
+            
+            if(Test-Path $downloadFile){
+                rm $downloadFile
+            }
+
+            if(Test-Path $installLocation){
+                rm -rf $installLocation
+            }
+
         }
 
         if(!(Test-Path $downloadFile)){
-            Write-Host "downloading $download" -ForegroundColor DarkYellow
-            Invoke-WebRequest -Uri $download -OutFile $downloadFile
+            Write-Host "downloading $downloadUrl" -ForegroundColor DarkYellow
+            Invoke-WebRequest -Uri $downloadUrl -OutFile $downloadFile
         }
 
-        rm -rf $installLocation
-        mkdir -p $installLocation
-        tar -xvf $downloadFile -C $installLocation
-        if(!$?){throw "extract $downloadFile to $installLocation"}
+        if(!(Test-Path $installLocation)){
+            mkdir -p $installLocation
+            tar -xvf $downloadFile -C $installLocation
+            if(!$?){throw "extract $downloadFile to $installLocation"}
+        }
 
         $envFileName="$PSScriptRoot/tools/dnv-$install"
         "# source this file to set dotnet version to $install" > $envFileName
         "export PATH=$($installLocation):`$PATH" >> $envFileName
         "export DOTNET_ROOT=$installLocation" >> $envFileName
+        chmod +x $envFileName
+
+        $envFileName="$PSScriptRoot/tools/dnv-$install.ps1"
+        "#!/usr/bin/env pwsh" > $envFileName
+        "# source this file to set dotnet version to $install" >> $envFileName
+        "`$Env:PATH=`"$($installLocation):`$Env:PATH`"" >> $envFileName
+        "`$Env:DOTNET_ROOT=`"$installLocation`"" >> $envFileName
         chmod +x $envFileName
 
         Write-Host "Installed $install at $installLocation" -ForegroundColor DarkGreen
@@ -158,9 +175,17 @@ try{
 
     }
 
+    if($installAll){
+        $autoHelp=$False
+
+        foreach($v in $versions){
+            &"$PSScriptRoot/dotnet-mgr.ps1" -install $v.name
+        }
+    }
+
 
     if($autoHelp -or $help){
-        Write-Host 'Usage: [-list] [-init {version-name}] [-install {version-name}] [-installCurrent {version-name}] [-noCache] [-initProfile] [-setVersion {version-name}] [-clean] [-help]'
+        Write-Host 'Usage: [-list] [-init {version-name}] [-install {version-name}] [-installCurrent {version-name}] [-noCache] [-installAll] [-initProfile] [-setVersion {version-name}] [-clean] [-help]'
     }
 
 }finally{

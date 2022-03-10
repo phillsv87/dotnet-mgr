@@ -115,6 +115,7 @@ dotnet --version
 | list           |         | List all installable versions contained in the dotnet-versions.json file                                                    |
 | help           |         | Print help                                                                                                                  |
 | install        | version | Installs a dotnet version                                                                                                   |
+| installAll     |         | Install all dotnet versions in dotnet-versions.json                                                                         |
 | installCurrent | version | Installs a dotnet version and sets it as the current version                                                                |
 | init           | version | Initializes the dmn command and installs the initial dotnet version                                                         |
 | noCache        |         | When used with -install cached files are deleted                                                                            |
